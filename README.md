@@ -1,0 +1,2 @@
+# Shop
+Programmeerimine - Ingvar Derešivski
