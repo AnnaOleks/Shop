@@ -24,7 +24,8 @@ namespace Shop.Controllers
                     ID = x.ID,
                     Name = x.Name,
                     BuiltDate = x.BuiltDate,
-                    TypeName = x.TypeName
+                    TypeName = x.TypeName,
+                    Crew = x.Crew
                 });
 
             return View(result);
