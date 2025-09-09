@@ -1,10 +1,16 @@
 ﻿@model IEnumerable<Shop.Models.Spaceships.SpaceshipsIndexViewModel>
+@{
+	int nr = 1;
+}
+@{
+	string mark = "*" ;
+}
 
 <div class="h1">
 	Spaceships
 </div>
 <form method="post">
-		<table class="table table-hover">
+	<table class="table table-hover">
 		<thead>
 			<tr>
 				<th scope="col"> Nr </th>
@@ -16,11 +22,13 @@
 			</tr>
 		</thead>
 		<tbody>
+			
 			@foreach (var spaceships in Model)
 			{
 				<tr>
 					<td>
-						Nr
+						@nr @mark
+							
 					</td>
 					<td>
 						@spaceships.Name
@@ -35,6 +43,8 @@
 						@spaceships.Crew
 					</td>
 				</tr>
+				nr++;
+				mark += "*";
 			}
 		</tbody>
 	</table>
