@@ -44,7 +44,9 @@
 					<td>
 						@spaceships.Crew
 					</td>
-					<td></td>
+					<td>
+						<a asp-action="delete" asp-controller="spaceships" asp-route-id="@spaceships.ID" class="btn btn-outline-danger"> Delete </a>
+					</td>
 				</tr>
 				nr++;
 				mark += "*";
