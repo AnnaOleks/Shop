@@ -5,7 +5,9 @@
 @{
 	string mark = "*" ;
 }
-
+<div>
+	<a asp-action="create" asp-controller="spaceships" type="submit" class="btn btn-primary"> Create </a>
+</div>
 <div class="h1">
 	Spaceships
 </div>
@@ -42,6 +44,7 @@
 					<td>
 						@spaceships.Crew
 					</td>
+					<td></td>
 				</tr>
 				nr++;
 				mark += "*";

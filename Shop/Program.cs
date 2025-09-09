@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Shop.Core.ServiceInterface;
 using Shop.Data;
+using Shop.ApplicationServices;
+using Shop.ApplicationServices.Services;
 
 namespace Shop
 {
@@ -13,7 +16,7 @@ namespace Shop
             builder.Services.AddControllersWithViews();
             // builder.Services.AddScoped<SpaceshipServices>();
             builder.Services.AddDbContext<ShopContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+            builder.Services.AddScoped<ISpaceshipsServices, SpaceshipsServices>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
