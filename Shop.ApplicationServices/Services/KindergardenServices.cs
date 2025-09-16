@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Shop.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace Shop.ApplicationServices.Services
 {
     internal class KindergardenServices
     {
+        private readonly ShopContext _context;
     }
 }
