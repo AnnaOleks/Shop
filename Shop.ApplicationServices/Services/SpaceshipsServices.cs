@@ -3,7 +3,6 @@ using Shop.Core.Domain;
 using Shop.Core.Dto;
 using Shop.Core.ServiceInterface;
 using Microsoft.EntityFrameworkCore;
-using Shop.Core.ServiceInterface;
 
 namespace Shop.ApplicationServices.Services
 {
