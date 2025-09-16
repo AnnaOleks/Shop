@@ -1,14 +1,22 @@
-﻿using Shop.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Shop.Core.ServiceInterface;
+using Shop.Data;
+
 
 namespace Shop.ApplicationServices.Services
 {
-    internal class KindergardenServices
+    public class KindergardenServices : IKindergardenServices
     {
         private readonly ShopContext _context;
+        private readonly IKindergardenServices _kgservice;
+
+        public KindergardenServices
+            (
+                ShopContext context,
+                IKindergardenServices kgservice
+            )
+        {
+            _context = context;
+            _kgservice = kgservice;
+        }
     }
 }
