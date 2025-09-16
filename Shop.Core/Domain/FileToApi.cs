@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Shop.Core.Domain
+{
+    public class FileToApi
+    {
+        public Guid Id {get; set;}
+        public string? ExistingFilePath { get; set;}
+        public Guid? SpaceshipId {get; set;}
+
+    }
+}

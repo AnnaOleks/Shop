@@ -1,26 +1,25 @@
 ﻿using Shop.Data;
 using Shop.Core.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Shop.Core.Dto;
 using Shop.Core.ServiceInterface;
 using Microsoft.EntityFrameworkCore;
+using Shop.Core.ServiceInterface;
 
 namespace Shop.ApplicationServices.Services
 {
     public class SpaceshipsServices : ISpaceshipsServices
     {
         private readonly ShopContext _context;
-        //teha konstruktor
+        private readonly IFileServices _fileServices;
         public SpaceshipsServices
             (
-                ShopContext context
+                ShopContext context,
+                IFileServices fileServices
+
             )
         {
             _context = context;
+            _fileServices = fileServices;
         }
 
         public async Task<Spaceship> Create(SpaceshipDto dto)
@@ -36,6 +35,8 @@ namespace Shop.ApplicationServices.Services
             spaceship.InnerVolume = dto.InnerVolume;
             spaceship.CreatedAt = DateTime.Now;
             spaceship.ModifiedAt = DateTime.Now;
+
+            _fileServices.FilesToApi(dto, spaceship);
 
             await _context.Spaceships.AddAsync(spaceship);
             await _context.SaveChangesAsync();

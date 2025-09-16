@@ -1,0 +1,77 @@
+﻿@model Shop.Models.Spaceships.SpaceshipDetailsViewModel
+
+<h1>Details</h1>
+<div>
+	<h4>Spaceship</h4>
+	<hr />
+	<dl class="row">
+		<div class="form-group row">
+			<label asp-for="ID" class="col-sm-2 col-form-label"></label>
+			@Html.DisplayFor(model => model.ID)
+		</div>
+	</dl>
+
+	<dl class="row">
+		<div class="form-group row">
+			<label asp-for="Name" class="col-sm-2 col-form-label"></label>
+			@Html.DisplayFor(model => model.Name)
+		</div>
+	</dl>
+
+	<dl class="row">
+		<div class="form-group row">
+			<label asp-for="TypeName" class="col-sm-2 col-form-label"></label>
+			@Html.DisplayFor(model => model.TypeName)
+		</div>
+	</dl>
+
+	<dl class="row">
+		<div class="form-group row">
+			<label asp-for="BuiltDate" class="col-sm-2 col-form-label"></label>
+			@Html.DisplayFor(model => model.BuiltDate)
+		</div>
+	</dl>
+
+	<dl class="row">
+		<div class="form-group row">
+			<label asp-for="Crew" class="col-sm-2 col-form-label"></label>
+			@Html.DisplayFor(model => model.Crew)
+		</div>
+	</dl>
+
+	<dl class="row">
+		<div class="form-group row">
+			<label asp-for="EnginePower" class="col-sm-2 col-form-label"></label>
+			@Html.DisplayFor(model => model.EnginePower)
+		</div>
+	</dl>
+
+	<dl class="row">
+		<div class="form-group row">
+			<label asp-for="Passengers" class="col-sm-2 col-form-label"></label>
+			@Html.DisplayFor(model => model.Passengers)
+		</div>
+	</dl>
+
+	<dl class="row">
+		<div class="form-group row">
+			<label asp-for="InnerVolume" class="col-sm-2 col-form-label"></label>
+			@Html.DisplayFor(model => model.InnerVolume)
+		</div>
+	</dl>
+
+	<dl class="row">
+		<div class="form-group row">
+			<label asp-for="CreatedAt" class="col-sm-2 col-form-label"></label>
+			@Html.DisplayFor(model => model.CreatedAt)
+		</div>
+	</dl>
+
+	<dl class="row">
+		<div class="form-group row">
+			<label asp-for="ModifiedAt" class="col-sm-2 col-form-label"></label>
+			@Html.DisplayFor(model => model.ModifiedAt)
+		</div>
+	</dl>
+	<a asp-action="Index" asp-controller="spaceships" class="btn btn-primary">Back</a>
+</div>

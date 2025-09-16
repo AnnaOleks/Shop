@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-
-
-namespace Shop.Core.Dto
+﻿namespace Shop.Models.Spaceships
 {
-    public class SpaceshipDto
+    public class SpaceshipDetailsViewModel
     {
         public Guid? ID { get; set; }
         public string? Name { get; set; }
@@ -13,9 +10,6 @@ namespace Shop.Core.Dto
         public int? EnginePower { get; set; }
         public int? Passengers { get; set; }
         public int? InnerVolume { get; set; }
-        public List<IFormFile> Files { get; set; }
-        public IEnumerable<FileToApiDto> FileToApiDtos { get; set; }
-            = new List<FileToApiDto>();
         public DateTime? CreatedAt { get; set; }
         public DateTime? ModifiedAt { get; set; }
     }
