@@ -7,16 +7,16 @@ namespace Shop.ApplicationServices.Services
     public class KindergardenServices : IKindergardenServices
     {
         private readonly ShopContext _context;
-        private readonly IKindergardenServices _kgservice;
+        private readonly IKindergardenServices _kindergardenservice;
 
         public KindergardenServices
             (
                 ShopContext context,
-                IKindergardenServices kgservice
+                IKindergardenServices kindergardenservice
             )
         {
             _context = context;
-            _kgservice = kgservice;
+            _kindergardenservice = kindergardenservice;
         }
     }
 }

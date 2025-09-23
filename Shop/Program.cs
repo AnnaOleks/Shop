@@ -1,8 +1,9 @@
-using Microsoft.EntityFrameworkCore;
+using Shop.ApplicationServices.Services;
 using Shop.Core.ServiceInterface;
 using Shop.Data;
-using Shop.ApplicationServices;
-using Shop.ApplicationServices.Services;
+using Microsoft.EntityFrameworkCore;
+
+
 
 namespace Shop
 {
@@ -14,9 +15,17 @@ namespace Shop
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            // builder.Services.AddScoped<SpaceshipServices>();
-            builder.Services.AddDbContext<ShopContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
             builder.Services.AddScoped<ISpaceshipsServices, SpaceshipsServices>();
+
+            builder.Services.AddScoped<IKindergardenServices, KindergardenServices>();
+
+            builder.Services.AddScoped<IFileServices, FileServices>();
+
+            builder.Services.AddDbContext<ShopContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnections")));
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
