@@ -73,6 +73,10 @@
 			@Html.DisplayFor(model => model.ModifiedAt)
 		</div>
 	</dl>
+	@foreach (var images in Model.Image)
+	{
+		<partial name="_Images" model="images" />	
+	}
 	<form asp-action="DeleteConfirmation">
 		<input type="hidden" asp-for="ID"/>
 		<input type="submit" value="Delete" class="btn btn-danger"/>

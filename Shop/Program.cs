@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using Shop.Core.ServiceInterface;
-using Shop.Data;
+using Microsoft.Extensions.FileProviders;
 using Shop.ApplicationServices;
 using Shop.ApplicationServices.Services;
+using Shop.Core.ServiceInterface;
+using Shop.Data;
 
 namespace Shop
 {
@@ -17,6 +18,7 @@ namespace Shop
             // builder.Services.AddScoped<SpaceshipServices>();
             builder.Services.AddDbContext<ShopContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddScoped<ISpaceshipsServices, SpaceshipsServices>();
+            builder.Services.AddScoped<IFileServices, FileServices>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -28,6 +30,7 @@ namespace Shop
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseRouting();
 
             app.UseAuthorization();
@@ -37,6 +40,7 @@ namespace Shop
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
+            
 
             app.Run();
         }

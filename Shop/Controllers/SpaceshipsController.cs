@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Shop.Models.Spaceships;
-using Shop.Data;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Shop.Core.ServiceInterface;
+using Microsoft.EntityFrameworkCore;
 using Shop.Core.Dto;
+using Shop.Core.ServiceInterface;
+using Shop.Data;
+using Shop.Models.Spaceships;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace Shop.Controllers
@@ -12,14 +14,17 @@ namespace Shop.Controllers
     {
         private readonly ShopContext _context;
         private readonly ISpaceshipsServices _spaceshipsServices;
+        private readonly IFileServices _fileServices;
         public SpaceshipsController
             (
                 ShopContext context,
-                ISpaceshipsServices spaceshipsServices
+                ISpaceshipsServices spaceshipsServices,
+                IFileServices fileServices
             )
         {
             _context = context;
             _spaceshipsServices = spaceshipsServices;
+            _fileServices = fileServices;
         }
 
         public IActionResult Index()
@@ -57,7 +62,15 @@ namespace Shop.Controllers
                 Passengers = vm.Passengers,
                 InnerVolume = vm.InnerVolume,
                 CreatedAt = vm.CreatedAt,
-                ModifiedAt = vm.ModifiedAt
+                ModifiedAt = vm.ModifiedAt,
+                Files = vm.Files,
+                FileToApiDtos = vm.Image
+                    .Select(x => new FileToApiDto
+                    {
+                        Id = x.ImageId,
+                        ExistingFilePath = x.FilePath,
+                        SpaceshipId = x.SpaceshipId
+                    }).ToArray()
 
             };
             var result = await _spaceshipsServices.Create(dto);
@@ -75,6 +88,14 @@ namespace Shop.Controllers
             {
                 return NotFound();
             }
+            var images = await _context.FileToApis
+                .Where(x => x.SpaceshipId == id)
+                .Select(y => new ImagesViewModel
+                {
+                    FilePath = y.ExistingFilePath,
+                    ImageId = y.Id,
+                }).ToArrayAsync();
+
             var vm = new SpaceshipDeleteViewModel();
             vm.ID = spaceship.ID;
             vm.Name = spaceship.Name;
@@ -86,6 +107,7 @@ namespace Shop.Controllers
             vm.InnerVolume = spaceship.InnerVolume;
             vm.CreatedAt = spaceship.CreatedAt;
             vm.ModifiedAt = spaceship.ModifiedAt;
+            vm.Image.AddRange(images);
 
             return View(vm);
         }
@@ -93,6 +115,7 @@ namespace Shop.Controllers
         public async Task<IActionResult> DeleteConfirmation(Guid id)
         {
             var spaceship = await _spaceshipsServices.Delete(id);
+
             if (spaceship == null)
             {
                 return RedirectToAction(nameof(Index));
@@ -109,6 +132,13 @@ namespace Shop.Controllers
             {
                 return NotFound();
             }
+            var images = await _context.FileToApis
+                .Where(x => x.SpaceshipId == id)
+                .Select(y => new ImagesViewModel
+                {
+                    FilePath = y.ExistingFilePath,
+                    ImageId = y.Id,
+                }).ToArrayAsync();
             var vm = new SpaceshipCreateUpdateViewModel();
             vm.ID = spaceship.ID;
             vm.Name = spaceship.Name;
@@ -120,6 +150,7 @@ namespace Shop.Controllers
             vm.InnerVolume = spaceship.InnerVolume;
             vm.CreatedAt = spaceship.CreatedAt;
             vm.ModifiedAt = spaceship.ModifiedAt;
+            vm.Image.AddRange(images);
 
             return View("CreateUpdate", vm);
         }
@@ -137,7 +168,15 @@ namespace Shop.Controllers
                 Passengers = vm.Passengers,
                 InnerVolume = vm.InnerVolume,
                 CreatedAt = vm.CreatedAt,
-                ModifiedAt = vm.ModifiedAt
+                ModifiedAt = vm.ModifiedAt,
+                Files = vm.Files,
+                FileToApiDtos = vm.Image
+                    .Select(x => new FileToApiDto
+                    {
+                        Id = x.ImageId,
+                        ExistingFilePath = x.FilePath,
+                        SpaceshipId = x.SpaceshipId
+                    }).ToArray()
             };
             var result = await _spaceshipsServices.Update(dto);
             if (result == null)
@@ -155,6 +194,14 @@ namespace Shop.Controllers
             {
                 return NotFound();
             }
+            var images = await _context.FileToApis
+                .Where(x => x.SpaceshipId == id)
+                .Select(y => new ImagesViewModel
+                {
+                    FilePath = y.ExistingFilePath,
+                    ImageId = y.Id,
+                }).ToArrayAsync();
+
             var vm = new SpaceshipDetailsViewModel();
             vm.ID = spaceship.ID;
             vm.Name = spaceship.Name;
@@ -166,9 +213,25 @@ namespace Shop.Controllers
             vm.InnerVolume = spaceship.InnerVolume;
             vm.CreatedAt = spaceship.CreatedAt;
             vm.ModifiedAt = spaceship.ModifiedAt;
+            vm.Image.AddRange(images);
 
             return View(vm);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> RemoveImage(ImagesViewModel vm)
+        {
+            var dto = new FileToApiDto()
+            {
+                Id = vm.ImageId
+            };
+            var image = await _fileServices.RemoveImageFromApi(dto);
+            if (image == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

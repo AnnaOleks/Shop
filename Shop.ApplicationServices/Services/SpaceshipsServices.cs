@@ -53,16 +53,27 @@ namespace Shop.ApplicationServices.Services
         }
         public async Task<Spaceship> Delete(Guid id)
         {
-            var spaceship = await _context.Spaceships
-                .FirstOrDefaultAsync(x => x.ID == id);
+            //foreach, milles sees toimub failide kustutamine
 
-            if (spaceship == null)
-                return null;
+            var images = await _context.FileToApis
+               .Where(x => x.SpaceshipId == dto.SpaceshipId)
+               .ToArrayAsync();
 
-            _context.Spaceships.Remove(spaceship);
+            foreach (var image in images)
+            {
+                var filePath = _webHost.ContentRootPath + "\\wwwroot\\multipleFileUpload\\" + image.ExistingFilePath;
+
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
+                _context.FileToApis.Remove(image);
+            }
+
             await _context.SaveChangesAsync();
 
-            return spaceship;
+            return null;
 
         }
 
@@ -80,6 +91,8 @@ namespace Shop.ApplicationServices.Services
             domain.InnerVolume = dto.InnerVolume;
             domain.CreatedAt = dto.CreatedAt;
             domain.ModifiedAt = DateTime.Now;
+
+            _fileServices.FilesToApi(dto, domain);
 
             _context.Spaceships.Update(domain);
             await _context.SaveChangesAsync();
