@@ -67,5 +67,53 @@ namespace Shop.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Update(Guid id)
+        {
+            var update = await _kindergardenServices.DetailAsync(id);
+
+            if (update == null)
+            {
+                return NotFound();
+            }
+            var vm = new KindergardenCreateUpdateViewModel();
+
+            vm.Id = update.Id;
+            vm.GroupName = update.GroupName;
+            vm.ChildrenCount = update.ChildrenCount;
+            vm.KindergardenName = update.KindergardenName;
+            vm.TeacherName = update.TeacherName;
+            vm.CreatedAt = update.CreatedAt;
+            vm.UpdatedAt = update.UpdatedAt;
+
+
+            return View("CreateUpdate", vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(KindergardenCreateUpdateViewModel vm)
+        {
+            var dto = new KindergardenDto()
+            {
+                Id = vm.Id,
+                GroupName = vm.GroupName,
+                ChildrenCount = vm.ChildrenCount,
+                KindergardenName = vm.KindergardenName,
+                TeacherName = vm.TeacherName,
+                CreatedAt = vm.CreatedAt,
+                UpdatedAt = vm.UpdatedAt,
+
+            };
+
+            var result = await _kindergardenServices.Update(dto);
+
+            if (result == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
