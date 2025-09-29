@@ -45,7 +45,9 @@
 						@kindergardens.TeacherName
 					</td>
 					<td>
-
+						<a asp-action="details" asp-controller="kindergarden" asp-route-id="@kindergardens.Id" class="btn btn-outline-primary"> Details </a>
+						<a asp-action="update" asp-controller="kindergarden" asp-route-id="@kindergardens.Id" class="btn btn-outline-warning"> Update </a>
+						<a asp-action="delete" asp-controller="kindergarden" asp-route-id="@kindergardens.Id" class="btn btn-outline-danger"> Delete </a>
 					</td>
 				</tr>
 				nr++;

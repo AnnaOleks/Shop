@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Shop.Core.Domain;
+using Shop.Core.Dto;
 using Shop.Core.ServiceInterface;
 using Shop.Data;
 using Shop.Models.Kindergarden;
-using Shop.Models.Spaceships;
+
 
 namespace Shop.Controllers
 {
@@ -36,6 +37,35 @@ namespace Shop.Controllers
 
             return View(result);
         }
-        
+        [HttpGet]
+        public IActionResult Create()
+        {
+            KindergardenCreateUpdateViewModel result = new();
+            return View("CreateUpdate", result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Create(KindergardenCreateUpdateViewModel vm)
+        {
+            var dto = new KindergardenDto()
+            {
+                Id = vm.Id,
+                GroupName = vm.GroupName,
+                ChildrenCount = vm.ChildrenCount,
+                KindergardenName = vm.KindergardenName,
+                TeacherName = vm.TeacherName,
+                CreatedAt = vm.CreatedAt,
+                UpdatedAt = vm.UpdatedAt,
+
+            };
+
+            var result = await _kindergardenServices.Create(dto);
+
+            if (result == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Shop.Models.Spaceships
+﻿namespace Shop.Models.Kindergarden
 {
     public class KindergardenCreateUpdateViewModel
     {
