@@ -1,6 +1,12 @@
-﻿namespace Shop.Core.Domain
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Shop.Core.Dto
 {
-    public class RealEstate
+    public class RealEstateDto
     {
         public Guid? Id { get; set; }
         public double? Area { get; set; }
