@@ -37,6 +37,12 @@ namespace Shop.ApplicationServices.Services
             RealEstate.CreatedAt = DateTime.Now;
             RealEstate.ModifiedAt = DateTime.Now;
 
+            //peaks kontrollima kas on faile voi ei ole
+            if(dto.Files != null)
+            {
+                _fileServices.UploadFilesToDatabase(dto, RealEstate);
+            }
+            
             await _context.RealEstate.AddAsync(RealEstate);
             await _context.SaveChangesAsync();
 

@@ -68,7 +68,7 @@ namespace Shop.ApplicationServices.Services
                 + imageId.ExistingFilePath;
 
             // kui fail on olemas, kustuta ara
-            if(File.Exists(filePath))
+            if (File.Exists(filePath))
             {
                 File.Delete(filePath);
             }
@@ -77,10 +77,10 @@ namespace Shop.ApplicationServices.Services
             return imageId;
         }
 
-        public async Task<List<FileToApi>>RemoveImagesFromApi(FileToApiDto[] dtos)
+        public async Task<List<FileToApi>> RemoveImagesFromApi(FileToApiDto[] dtos)
         {
             //foreach, mille sees toimub failide kustutamine
-           foreach (var dto in dtos)
+            foreach (var dto in dtos)
             {
                 var imageId = await _context.FileToApis
                 .FirstOrDefaultAsync(x => x.Id == dto.Id);
@@ -96,6 +96,34 @@ namespace Shop.ApplicationServices.Services
                 await _context.SaveChangesAsync();
             }
             return null;
+        }
+
+        public void UploadFilesToDatabase(RealEstateDto dto, RealEstate domain)
+        {
+            //tuleb ara kontrollida, kas on uks fail voi mitu
+            if (dto?.Files != null || dto.Files.Count > 0)
+            {
+                //kui tuleb mitu faili, siis igaks juhuks tuleks kasutada foreachi
+                foreach (var file in dto.Files)
+                {
+                    //foreach sees kasutada using-t ja ara mappida
+                    using (var target = new MemoryStream())
+                    {
+                        FileToDatabase files = new FileToDatabase()
+                        {
+                            Id = Guid.NewGuid(),
+                            ImageTitle = file.FileName,
+                            RealEstateId = domain.Id
+                        };
+                        //salvestada andmed andmebaasi
+                        file.CopyTo(target);
+                        files.ImageData = target.ToArray();
+                        _context.FileToDatabase.Add(files);
+                    }
+                }
+
+                
+            }
         }
     }
 }
