@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Shop.ApplicationServices.Services;
 using Shop.Core.Dto;
 using Shop.Core.ServiceInterface;
 using Shop.Data;
 using Shop.Models.RealEstate;
 using Shop.Models.Spaceships;
+using System.Collections.Generic;
 
 namespace Shop.Controllers
 {
@@ -40,6 +42,8 @@ namespace Shop.Controllers
 
             return View(result);
         }
+
+        
         [HttpGet]
         public IActionResult Create()
         {
@@ -84,6 +88,7 @@ namespace Shop.Controllers
             {
                 return NotFound();
             }
+            var images = await ImageMethod(id);
 
             var vm = new RealEstateDeleteViewModel();
             vm.Id = realEstate.Id;
@@ -93,6 +98,7 @@ namespace Shop.Controllers
             vm.BuildingType = realEstate.BuildingType;
             vm.CreatedAt = realEstate.CreatedAt;
             vm.ModifiedAt = realEstate.ModifiedAt;
+            vm.Image.AddRange(images);
 
             return View(vm);
         }
@@ -117,7 +123,8 @@ namespace Shop.Controllers
             {
                 return NotFound();
             }
-            
+            var images = await ImageMethod(id);
+
             var vm = new RealEstateCreateUpdateViewModel();
             vm.Id = realEstate.Id;
             vm.Area = realEstate.Area;
@@ -126,6 +133,7 @@ namespace Shop.Controllers
             vm.BuildingType = realEstate.BuildingType;
             vm.CreatedAt = realEstate.CreatedAt;
             vm.ModifiedAt = realEstate.ModifiedAt;
+            vm.Image.AddRange(images);
 
             return View("CreateUpdate", vm);
         }
@@ -140,7 +148,16 @@ namespace Shop.Controllers
                 RoomNumber = vm.RoomNumber,
                 BuildingType = vm.BuildingType,
                 CreatedAt = vm.CreatedAt,
-                ModifiedAt = vm.ModifiedAt
+                ModifiedAt = vm.ModifiedAt,
+                Files = vm.Files,
+                Image = vm.Image
+                    .Select(x => new FileToDatabaseDto
+                    {
+                        Id = x.Id,
+                        ImageData = x.ImageData,
+                        ImageTitle = x.ImageTitle,
+                        RealEstateId = x.RealEstateId
+                    }).ToArray()
             };
             var result = await _realEstateService.Update(dto);
             if (result == null)
@@ -158,7 +175,9 @@ namespace Shop.Controllers
             {
                 return NotFound();
             }
-            
+   
+            var images = await ImageMethod(id);
+
             var vm = new RealEstateDetailsViewModel();
             vm.Id = RealEstate.Id;
             vm.Area = RealEstate.Area;
@@ -167,8 +186,46 @@ namespace Shop.Controllers
             vm.BuildingType = RealEstate.BuildingType;
             vm.CreatedAt = RealEstate.CreatedAt;
             vm.ModifiedAt = RealEstate.ModifiedAt;
+            vm.Image.AddRange(images);
 
             return View(vm);
+        }
+
+        //[HttpPost]
+        //public async Task<IActionResult> RemoveImage(RealEstateImagesViewModel vm)
+        //{
+        //    var dto = new FileToDatabaseDto()
+        //    {
+        //        Id = vm.Id
+        //    };
+        //    var image = await _fileServices.RemoveImageFromApi(dto);
+        //    if (image == null)
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+        [HttpGet]
+        public async Task<RealEstateImagesViewModel[]> ImageMethod(Guid id)
+        {
+            // Проверяем, есть ли вообще данные
+            var images = await _context.FileToDatabase
+                .Where(x => x.RealEstateId == id)
+                .Select(y => new RealEstateImagesViewModel
+                {
+                    RealEstateId = y.RealEstateId,
+                    Id = y.Id,
+                    ImageData = y.ImageData,
+                    ImageTitle = y.ImageTitle,
+                    // Преобразуем бинарные данные в base64 для отображения в <img>
+                    Image = "data:image/gif;base64," + Convert.ToBase64String(y.ImageData)
+                })
+                .ToArrayAsync();
+
+            // Возвращаем результат
+            return images;
         }
     }
 }

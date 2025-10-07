@@ -52,7 +52,22 @@
 			@Html.DisplayFor(model => model.ModifiedAt)
 		</div>
 	</dl>
-
+	@if (Model.Image != null && Model.Image.Any())
+	{
+		<div>
+			@foreach (var image in Model.Image)
+			{
+				<div style="margin-bottom: 15px;">
+					<img src="@image.Image" alt="@image.ImageTitle" style="max-width: 300px;" />
+					<p>@image.ImageTitle</p>
+				</div>
+			}
+		</div>
+	}
+	else
+	{
+		<p>No photos available.</p>
+	}
 	
 	<a asp-action="Index" asp-controller="RealEstate" class="btn btn-primary">Back</a>
 	
