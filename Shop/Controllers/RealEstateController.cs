@@ -207,7 +207,7 @@ namespace Shop.Controllers
         //    return RedirectToAction(nameof(Index));
         //}
 
-        [HttpGet]
+
         public async Task<RealEstateImagesViewModel[]> ImageMethod(Guid id)
         {
             // Проверяем, есть ли вообще данные
