@@ -10,14 +10,17 @@ namespace Shop.ApplicationServices.Services
     public class KindergardenServices : IKindergardenServices
     {
         private readonly ShopContext _context;
+        private readonly IFileServices _fileServices;
 
         // teha constructor
         public KindergardenServices
             (
-                ShopContext  context
+                ShopContext  context,
+                IFileServices fileServices
             )
         {
             _context = context;
+            _fileServices = fileServices;
         }
         public async Task<Kindergarden> Create(KindergardenDto dto)
         {
@@ -31,6 +34,10 @@ namespace Shop.ApplicationServices.Services
             kindergarden.CreatedAt = DateTime.Now;
             kindergarden.UpdatedAt = DateTime.Now;
 
+            if (dto.Files != null)
+            {
+                _fileServices.UploadFilesToDatabase(dto, kindergarden);
+            }
 
             await _context.Kindergardens.AddAsync(kindergarden);
             await _context.SaveChangesAsync();
