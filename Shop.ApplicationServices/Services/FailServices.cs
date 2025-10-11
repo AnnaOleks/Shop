@@ -61,13 +61,13 @@ namespace Shop.ApplicationServices.Services
         }
         public void UploadFilesToDatabase(KindergardenDto dto, Kindergarden domain)
         {
-            //tuleb ära kontrollida, kas on üks fail või mitu
-            if (dto.Image != null && dto.Image.Count > 0)
+            //tuleb ara kontrollida, kas on uks fail voi mitu
+            if (dto?.Files != null || dto.Files.Count > 0)
             {
                 //kui tuleb mitu faili, siis igaks juhuks tuleks kasutada foreachi
-                foreach (var file in dto.Image)
+                foreach (var file in dto.Files)
                 {
-                    //foreachi sees kasutada using-t ja ära mappida
+                    //foreach sees kasutada using-t ja ara mappida
                     using (var target = new MemoryStream())
                     {
                         FileToDatabase files = new FileToDatabase()
@@ -79,7 +79,6 @@ namespace Shop.ApplicationServices.Services
                         //salvestada andmed andmebaasi
                         file.CopyTo(target);
                         files.ImageData = target.ToArray();
-
                         _context.FileToDatabase.Add(files);
                     }
                 }
