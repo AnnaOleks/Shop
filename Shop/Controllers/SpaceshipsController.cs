@@ -24,7 +24,7 @@ namespace Shop.Controllers
 
         public IActionResult Index()
         {
-            var result = _context.Spaceships
+            var result = _context.SpaceshipsKinder
                 .Select(x => new SpaceshipsIndexViewModel
                 {
                     ID = x.ID,

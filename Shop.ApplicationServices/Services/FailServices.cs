@@ -54,7 +54,7 @@ namespace Shop.ApplicationServices.Services
                             SpaceshipId = spaceship.ID
                         };
 
-                        _context.FileToApis.AddAsync(path);
+                        _context.FileToApisKinder.AddAsync(path);
                     }
                 }
             }
@@ -79,7 +79,7 @@ namespace Shop.ApplicationServices.Services
                         //salvestada andmed andmebaasi
                         file.CopyTo(target);
                         files.ImageData = target.ToArray();
-                        _context.FileToDatabase.Add(files);
+                        _context.FileToDataKinder.Add(files);
                     }
                 }
             }

@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shop.Data;
 
@@ -12,11 +11,9 @@ using Shop.Data;
 namespace Shop.Data.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    [Migration("20250928222119_initial migration")]
-    partial class initialmigration
+    partial class ShopContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,7 +36,27 @@ namespace Shop.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FileToApis");
+                    b.ToTable("FileToApisKinder");
+                });
+
+            modelBuilder.Entity("Shop.Core.Domain.FileToDatabase", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("KindergardenId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FileToDataKinder");
                 });
 
             modelBuilder.Entity("Shop.Core.Domain.Kindergarden", b =>
@@ -106,7 +123,41 @@ namespace Shop.Data.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Spaceships");
+                    b.ToTable("SpaceshipsKinder");
+                });
+
+            modelBuilder.Entity("Shop.Core.Dto.FileToDatabaseDto", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("KindergardenId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KindergardenId");
+
+                    b.ToTable("FileToDatabaseDto");
+                });
+
+            modelBuilder.Entity("Shop.Core.Dto.FileToDatabaseDto", b =>
+                {
+                    b.HasOne("Shop.Core.Domain.Kindergarden", null)
+                        .WithMany("Image")
+                        .HasForeignKey("KindergardenId");
+                });
+
+            modelBuilder.Entity("Shop.Core.Domain.Kindergarden", b =>
+                {
+                    b.Navigation("Image");
                 });
 #pragma warning restore 612, 618
         }

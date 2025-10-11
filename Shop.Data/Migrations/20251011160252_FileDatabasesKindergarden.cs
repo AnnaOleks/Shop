@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Shop.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class initialmigration : Migration
+    public partial class FileDatabasesKindergarden : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "FileToApis",
+                name: "FileToApisKinder",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -21,7 +21,21 @@ namespace Shop.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FileToApis", x => x.Id);
+                    table.PrimaryKey("PK_FileToApisKinder", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FileToDataKinder",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ImageTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    KindergardenId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FileToDataKinder", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -42,7 +56,7 @@ namespace Shop.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Spaceships",
+                name: "SpaceshipsKinder",
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -58,21 +72,51 @@ namespace Shop.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Spaceships", x => x.ID);
+                    table.PrimaryKey("PK_SpaceshipsKinder", x => x.ID);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "FileToDatabaseDto",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ImageTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    KindergardenId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FileToDatabaseDto", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FileToDatabaseDto_Kindergardens_KindergardenId",
+                        column: x => x.KindergardenId,
+                        principalTable: "Kindergardens",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FileToDatabaseDto_KindergardenId",
+                table: "FileToDatabaseDto",
+                column: "KindergardenId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "FileToApis");
+                name: "FileToApisKinder");
+
+            migrationBuilder.DropTable(
+                name: "FileToDatabaseDto");
+
+            migrationBuilder.DropTable(
+                name: "FileToDataKinder");
+
+            migrationBuilder.DropTable(
+                name: "SpaceshipsKinder");
 
             migrationBuilder.DropTable(
                 name: "Kindergardens");
-
-            migrationBuilder.DropTable(
-                name: "Spaceships");
         }
     }
 }

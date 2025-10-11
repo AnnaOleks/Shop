@@ -8,9 +8,9 @@ namespace Shop.Data
         public ShopContext(DbContextOptions<ShopContext> options) : base(options)
         {
         }
-        public DbSet<Spaceship> Spaceships { get; set; }
-        public DbSet<FileToApi> FileToApis { get; set; }
+        public DbSet<Spaceship> SpaceshipsKinder { get; set; }
+        public DbSet<FileToApi> FileToApisKinder { get; set; }
         public DbSet<Kindergarden> Kindergardens { get; set; }
-        public DbSet<FileToDatabase> FileToDatabases { get; set; }
+        public DbSet<FileToDatabase> FileToDataKinder { get; set; }
     }
 }

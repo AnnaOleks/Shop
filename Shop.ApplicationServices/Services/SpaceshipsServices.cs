@@ -37,7 +37,7 @@ namespace Shop.ApplicationServices.Services
 
             _fileServices.FilesToApi(dto, spaceship);
 
-            await _context.Spaceships.AddAsync(spaceship);
+            await _context.SpaceshipsKinder.AddAsync(spaceship);
             await _context.SaveChangesAsync();
 
             return spaceship;
@@ -45,20 +45,20 @@ namespace Shop.ApplicationServices.Services
 
         public async Task<Spaceship> DetailAsync(Guid id)
         {
-            var result = await _context.Spaceships
+            var result = await _context.SpaceshipsKinder
                 .FirstOrDefaultAsync(x => x.ID == id);
             return result;
 
         }
         public async Task<Spaceship> Delete(Guid id)
         {
-            var spaceship = await _context.Spaceships
+            var spaceship = await _context.SpaceshipsKinder
                 .FirstOrDefaultAsync(x => x.ID == id);
 
             if (spaceship == null)
                 return null;
 
-            _context.Spaceships.Remove(spaceship);
+            _context.SpaceshipsKinder.Remove(spaceship);
             await _context.SaveChangesAsync();
 
             return spaceship;
@@ -80,7 +80,7 @@ namespace Shop.ApplicationServices.Services
             domain.CreatedAt = dto.CreatedAt;
             domain.ModifiedAt = DateTime.Now;
 
-            _context.Spaceships.Update(domain);
+            _context.SpaceshipsKinder.Update(domain);
             await _context.SaveChangesAsync();
 
             return domain;
