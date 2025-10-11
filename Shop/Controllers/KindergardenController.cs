@@ -13,14 +13,17 @@ namespace Shop.Controllers
     {
         private readonly ShopContext _context;
         private readonly IKindergardenServices _kindergardenServices;
+        private readonly IFileServices _fileServices;
         public KindergardenController
             (
                 ShopContext context,
-                IKindergardenServices kindergardenServices
+                IKindergardenServices kindergardenServices,
+                IFileServices fileServices
             )
         {
             _context = context;
             _kindergardenServices = kindergardenServices;
+            _fileServices = fileServices;
         }
 
         public IActionResult Index()
@@ -55,7 +58,15 @@ namespace Shop.Controllers
                 TeacherName = vm.TeacherName,
                 CreatedAt = vm.CreatedAt,
                 UpdatedAt = vm.UpdatedAt,
-
+                Files = vm.Files,
+                Image = vm.Image
+                    .Select(x => new FileToDatabaseDto
+                    {
+                        Id = x.Id,
+                        ImageData = x.ImageData,
+                        ImageTitle = x.ImageTitle,
+                        KindergardenId = x.KindergardenId
+                    }).ToArray()
             };
 
             var result = await _kindergardenServices.Create(dto);
