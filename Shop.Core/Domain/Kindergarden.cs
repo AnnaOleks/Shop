@@ -1,4 +1,6 @@
-﻿namespace Shop.Core.Domain
+﻿using Shop.Core.Dto;
+
+namespace Shop.Core.Domain
 {
     public class Kindergarden
     {
@@ -7,6 +9,8 @@
         public int? ChildrenCount { get; set; }
         public string? KindergardenName { get; set; }
         public string? TeacherName { get; set; }
+        public IEnumerable<FileToDatabaseDto> Image { get; set; }
+            = new List<FileToDatabaseDto>();
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
 
