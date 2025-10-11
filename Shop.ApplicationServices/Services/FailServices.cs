@@ -1,8 +1,9 @@
-﻿using Shop.Core.Domain;
+﻿using Microsoft.Extensions.Hosting;
+using Shop.Core.Domain;
 using Shop.Core.Dto;
 using Shop.Core.ServiceInterface;
 using Shop.Data;
-using Microsoft.Extensions.Hosting;
+using System.Xml;
 
 
 namespace Shop.ApplicationServices.Services
@@ -58,5 +59,28 @@ namespace Shop.ApplicationServices.Services
                 }
             }
         }
-    }
+        public void UploadFilesToDatabase(KindergardenDto dto, Kindergarden domain)
+        {
+            //tuleb ara kontrollida, kas on uks fail voi mitu
+            if (dto?.Image != null || dto.Image.Count > 0)
+            {
+                //kui tuleb mitu faili, siis igaks juhuks tuleks kasutada foreachi
+                foreach (var file in dto.Image)
+                {
+                    //foreach sees kasutada using-t ja ara mappida
+                    using (var target = new MemoryStream())
+                    {
+                        FileToDatabase files = new FileToDatabase()
+                        {
+                            Id = Guid.NewGuid(),
+                            ImageTitle = file.ImageTitle,
+                            KindergardenId = domain.Id
+                        };
+                        //salvestada andmed andmebaasi
+                        file.CopyTo(target);
+                        files.ImageData = target.ToArray();
+                        _context.FileToDatabase.Add(files);
+                    }
+                }
+            }
 }
