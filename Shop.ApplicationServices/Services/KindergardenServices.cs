@@ -57,6 +57,18 @@ namespace Shop.ApplicationServices.Services
             var remove = await _context.Kindergardens
                 .FirstOrDefaultAsync(x => x.Id == id);
 
+            var images = await _context.FileToDataKinder
+                .Where(x => x.KindergardenId == id)
+                .Select(y => new FileToDatabaseDto
+                {
+                    Id = y.Id,
+                    ImageData = y.ImageData,
+                    ImageTitle = y.ImageTitle,
+                    KindergardenId = y.KindergardenId
+                }).ToArrayAsync();
+
+            await _fileServices.RemoveImagesFromDatabase(images);
+
             _context.Kindergardens.Remove(remove);
             await _context.SaveChangesAsync();
 
@@ -73,6 +85,7 @@ namespace Shop.ApplicationServices.Services
             domain.TeacherName = dto.TeacherName;
             domain.CreatedAt = dto.CreatedAt;
             domain.UpdatedAt = DateTime.Now;
+            _fileServices.UploadFilesToDatabase(dto, domain);
 
             _context.Kindergardens.Update(domain);
             await _context.SaveChangesAsync();
