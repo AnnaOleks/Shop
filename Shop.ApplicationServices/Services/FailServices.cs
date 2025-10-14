@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Shop.Core.Domain;
 using Shop.Core.Dto;
 using Shop.Core.ServiceInterface;
@@ -84,5 +85,39 @@ namespace Shop.ApplicationServices.Services
                 }
             }
         }
+        public async Task<FileToDatabase> RemoveImageFromDatabase(FileToDatabaseDto dto)
+        {
+            var imageId = await _context.FileToDataKinder
+                .FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+            // kui fail on olemas, kustuta ara
+            if (imageId != null)
+            {
+                _context.FileToDataKinder.Remove(imageId);
+                await _context.SaveChangesAsync();
+                return imageId;
+            }
+            return null;
+        }
+
+        public async Task<FileToDatabase> RemoveImagesFromDatabase(FileToDatabaseDto[] dtos)
+        {
+            //foreach, mille sees toimub failide kustutamine
+            foreach (var dto in dtos)
+            {
+                var imageId = await _context.FileToDataKinder
+                .FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+                if (imageId != null)
+                {
+                    _context.FileToDataKinder.Remove(imageId);
+                    await _context.SaveChangesAsync();
+                }
+                
+            }
+            return null;
+        }
+
+        
     }
 }

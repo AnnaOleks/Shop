@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Shop.Core.Domain;
 using Shop.Core.Dto;
@@ -62,7 +63,7 @@ namespace Shop.Controllers
                 Image = vm.Image
                     .Select(x => new FileToDatabaseDto
                     {
-                        Id = x.Id,
+                        Id = x.ImageId,
                         ImageData = x.ImageData,
                         ImageTitle = x.ImageTitle,
                         KindergardenId = x.KindergardenId
@@ -88,6 +89,9 @@ namespace Shop.Controllers
             {
                 return NotFound();
             }
+
+            KindergardenImagesViewModel[] images = await ImageMethod(id);
+
             var vm = new KindergardenCreateUpdateViewModel();
 
             vm.Id = update.Id;
@@ -98,6 +102,8 @@ namespace Shop.Controllers
             vm.CreatedAt = update.CreatedAt;
             vm.UpdatedAt = update.UpdatedAt;
 
+            vm.Image ??= new List<KindergardenImagesViewModel>();
+            vm.Image.AddRange(images);
 
             return View("CreateUpdate", vm);
         }
@@ -114,7 +120,15 @@ namespace Shop.Controllers
                 TeacherName = vm.TeacherName,
                 CreatedAt = vm.CreatedAt,
                 UpdatedAt = vm.UpdatedAt,
-
+                Files = vm.Files,
+                Image = vm.Image
+                    .Select(x => new FileToDatabaseDto
+                    {
+                        Id = x.ImageId,
+                        ImageData = x.ImageData,
+                        ImageTitle = x.ImageTitle,
+                        KindergardenId = x.KindergardenId
+                    }).ToArray()
             };
 
             var result = await _kindergardenServices.Update(dto);
@@ -124,7 +138,7 @@ namespace Shop.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), vm);
         }
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
@@ -136,6 +150,8 @@ namespace Shop.Controllers
                 return NotFound();
             }
 
+            KindergardenImagesViewModel[] images = await ImageMethod(id);
+
             var vm = new KindergardenDetailsViewModel();
 
             vm.Id = kindergarten.Id;
@@ -145,6 +161,8 @@ namespace Shop.Controllers
             vm.TeacherName = kindergarten.TeacherName;
             vm.CreatedAt = kindergarten.CreatedAt;
             vm.UpdatedAt = kindergarten.UpdatedAt;
+
+            vm.Image.AddRange(images);
 
             return View(vm);
         }
@@ -158,6 +176,8 @@ namespace Shop.Controllers
                 return NotFound();
             }
 
+            KindergardenImagesViewModel[] images = await ImageMethod(id);
+
             var vm = new KindergardenDeleteViewModel();
 
             vm.Id = kindergarten.Id;
@@ -167,7 +187,7 @@ namespace Shop.Controllers
             vm.TeacherName = kindergarten.TeacherName;
             vm.CreatedAt = kindergarten.CreatedAt;
             vm.UpdatedAt = kindergarten.UpdatedAt;
-
+            vm.Image.AddRange(images);
 
             return View(vm);
         }
@@ -181,6 +201,42 @@ namespace Shop.Controllers
                 return NotFound();
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveImage(KindergardenImagesViewModel vm)
+        {
+            var dto = new FileToDatabaseDto()
+            {
+                Id = vm.ImageId
+            };
+            var image = await _fileServices.RemoveImageFromDatabase(dto);
+            if (image == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<KindergardenImagesViewModel[]> ImageMethod(Guid id)
+        {
+            // Проверяем, есть ли вообще данные
+            var images = await _context.FileToDataKinder
+                .Where(x => x.KindergardenId == id)
+                .Select(y => new KindergardenImagesViewModel
+                {
+                    KindergardenId = y.KindergardenId,
+                    ImageId = y.Id,
+                    ImageData = y.ImageData,
+                    ImageTitle = y.ImageTitle,
+                    // Преобразуем бинарные данные в base64 для отображения в <img>
+                    Image = "data:image/gif;base64," + Convert.ToBase64String(y.ImageData)
+                })
+                .ToArrayAsync();
+
+            // Возвращаем результат
+            return images;
         }
     }
 }

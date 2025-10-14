@@ -49,8 +49,11 @@ else
 		</div>
 		@foreach (var images in Model.Image)
 		{
-			<partial name="_Images" model="images" />
-			<input asp-action="RemoveImage" asp-controller="kindergarden" asp-route-imageId="@images.Id" type="submit" class="btn btn-danger" value="Remove Image" />
+			<div class="d-flex align-items-center mb-3">
+				<partial name="_Images" model="images" />
+				<input asp-action="removeImage" asp-controller="kindergarden" asp-route-imageId="@images.ImageId"
+					   type="submit" class="btn btn-danger ms-3" value="Delete" />
+			</div>
 		}
 		@if (Model.Id.HasValue)
 		{
