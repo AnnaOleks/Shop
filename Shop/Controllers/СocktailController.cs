@@ -21,6 +21,7 @@ namespace Shop.Controllers
             return View();
         }
 
+
         [HttpPost]
         public IActionResult SearchCocktail(cocktailSearchViewModel model)
         {
