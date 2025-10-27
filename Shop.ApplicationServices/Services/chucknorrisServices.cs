@@ -16,7 +16,7 @@ namespace Shop.ApplicationServices.Services
 
         public async Task<chucknorrisDto> GetRandomAsync()
         {
-            string apiUrl = "https://api.chucknorris.io/jokes/random";
+            string apiUrl = "";
 
             // Делаем запрос к API
             var response = await _httpClient.GetAsync(apiUrl);
