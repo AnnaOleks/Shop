@@ -1,0 +1,25 @@
+﻿@model Shop.Models.cocktails.cocktailViewModel
+
+<div class="container">
+    <h2>@Model?.strDrink</h2>
+    <hr />
+
+    @if (!string.IsNullOrWhiteSpace(Model?.strDrinkThumb))
+    {
+        <img src="@Model.strDrinkThumb" alt="@Model.strDrink" class="img-fluid mb-3" />
+    }
+
+    <dl class="row text-dark">
+        <dt class="col-sm-3">Category</dt>
+        <dd class="col-sm-9">@Model?.strCategory</dd>
+
+        <dt class="col-sm-3">Alcoholic</dt>
+        <dd class="col-sm-9">@Model?.strAlcoholic</dd>
+
+        <dt class="col-sm-3">Glass</dt>
+        <dd class="col-sm-9">@Model?.strGlass</dd>
+
+        <dt class="col-sm-3">Instructions</dt>
+        <dd class="col-sm-9">@Model?.strInstructions</dd>
+    </dl>
+</div>

@@ -20,6 +20,10 @@ namespace Shop
             builder.Services.AddScoped<ISpaceshipsServices, SpaceshipsServices>();
             builder.Services.AddScoped<IRealEstateService, RealEstateServices>();
             builder.Services.AddScoped<IFileServices, FileServices>();
+            builder.Services.AddHttpClient();
+            builder.Services.AddScoped<IWeatherForecastServices, WeatherForecastServices>();
+            builder.Services.AddScoped<IchucknorrisServices, chucknorrisServices>();
+            builder.Services.AddScoped<IcocktailServices, cocktailServices>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

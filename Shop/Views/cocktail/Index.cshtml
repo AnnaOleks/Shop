@@ -1,0 +1,15 @@
+﻿@model Shop.Models.cocktails.cocktailSearchViewModel
+
+<h2>Otsi kokteili</h2>
+<form asp-action="SearchCocktail" method="post" novalidate>
+    <div class="mb-3">
+        <label asp-for="strDrink" class="form-label"></label>
+        <input asp-for="strDrink" class="form-control" />
+        <span asp-validation-for="strDrink" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Otsi</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,22 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Shop.Core.Dto
+﻿namespace Shop.Models.Weather
 {
-    public class AccuLocationWeatherResultDto
+    public class AccuWeatherViewModel
     {
         public string CityName { get; set; } = string.Empty;
-        public string CityCode { get; set; } = string.Empty;
-
         public string EffectiveDate { get; set; } = string.Empty;
         public Int64 EffectiveEpochDate { get; set; }
         public int Severity { get; set; }
         public string Text { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;
-        public string EndDate { get; set; }
+        public string EndDate { get; set; } = string.Empty;
         public Int64 EndEpochDate { get; set; }
 
 
