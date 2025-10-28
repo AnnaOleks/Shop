@@ -73,4 +73,3 @@ namespace Shop.Core.Dto
 
     }
 }
-}
