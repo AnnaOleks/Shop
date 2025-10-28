@@ -15,7 +15,7 @@ namespace Shop.ApplicationServices.Services
         public async Task<cocktailDto> GetCocktailAsync(cocktailDto dto)
         {
             using var http = new HttpClient();
-            var url = $"";
+            var url = $"https://www.thecocktaildb.com/api/json/v1/1/search.php?s={dto.strDrink}";
             var resp = await http.GetAsync(url);
             if (!resp.IsSuccessStatusCode) return dto;
 
