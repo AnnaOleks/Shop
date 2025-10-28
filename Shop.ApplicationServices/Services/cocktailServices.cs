@@ -10,6 +10,7 @@ using static System.Net.WebRequestMethods;
 
 namespace Shop.ApplicationServices.Services
 {
+
     public class cocktailServices : IcocktailServices
     {
         public async Task<cocktailDto> GetCocktailAsync(cocktailDto dto)
