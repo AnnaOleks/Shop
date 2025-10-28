@@ -8,5 +8,7 @@
         public string? strAlcoholic { get; set; }
         public string? strInstructions { get; set; }
         public string? strDrinkThumb { get; set; }
+
+
     }
 }
