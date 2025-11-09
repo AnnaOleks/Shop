@@ -24,6 +24,7 @@ namespace Shop
             builder.Services.AddScoped<IWeatherForecastServices, WeatherForecastServices>();
             builder.Services.AddScoped<IchucknorrisServices, chucknorrisServices>();
             builder.Services.AddScoped<IcocktailServices, cocktailServices>();
+            builder.Services.AddScoped<IOpenWeatherServices, OpenWeatherServices>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
