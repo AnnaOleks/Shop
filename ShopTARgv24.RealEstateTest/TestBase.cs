@@ -22,16 +22,19 @@ namespace ShopTARgv24.RealEstateTest
             serviceProvider = services.BuildServiceProvider();
         }
 
+
+        //
         public virtual void SetupServices(IServiceCollection services)
         {
-
+            //
             services.AddScoped<IRealEstateService, RealEstateServices>();
 
+
+            //services.AddScoped<IFileServices, FakeFileServices>();
             services.AddScoped<IFileServices, FileServices>();
             services.AddScoped<IHostEnvironment, MockHostEnvironment>();
 
-            services.AddSingleton<IHostEnvironment>(new TestHostEnvironment());
-
+            //
             services.AddDbContext<ShopContext>(x =>
             {
                 //
@@ -39,24 +42,38 @@ namespace ShopTARgv24.RealEstateTest
                 //
                 x.ConfigureWarnings(b => b.Ignore(InMemoryEventId.TransactionIgnoredWarning));
             });
+
             RegisterMacros(services);
         }
 
+
+        // макрос - 
         private void RegisterMacros(IServiceCollection services)
         {
             var macroBaseType = typeof(IMacros);
-            var macroTypes = macroBaseType.Assembly.GetTypes()
+
+            var macros = macroBaseType.Assembly.GetTypes()
                 .Where(t => macroBaseType.IsAssignableFrom(t)
-                && t.IsInterface && !t.IsAbstract);
+                && !t.IsInterface && !t.IsAbstract);
         }
 
-        protected T Svc<T>()
+
+        protected T Svc<T>() where T : notnull
         {
-            return serviceProvider.GetService<T>();
+            return serviceProvider.GetRequiredService<T>();
         }
 
+        // 
+        //protected T Svc<T>()
+        //{
+        //    return serviceProvider.GetService<T>();
+        //}
+
+        //
         public void Dispose()
         {
+
         }
+
     }
 }
