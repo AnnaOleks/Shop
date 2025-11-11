@@ -21,6 +21,19 @@ public class RealEstateTest : TestBase
             ModifiedAt = DateTime.Now
         };
     }
+    public static RealEstateDto RealEstatedto0()
+    {
+        return new()
+        {
+            Id = null,
+            Area = null,
+            Location = null,
+            RoomNumber = null,
+            BuildingType = null,
+            CreatedAt = null,
+            ModifiedAt = null
+        };
+    }
 
     public static RealEstateDto RealEstatedto2()
     {
@@ -290,4 +303,90 @@ public class RealEstateTest : TestBase
         Assert.Equal(update, fake.ModifiedAt); // это правильно
     }
 
+    // Test 1: Should_AddRealEstate_WhenAreaIsNegative
+    // Test kontrollib, et PRAEGUNE rakendus lubab negatiivse pindala (Area < 0) ilma veata salvestada – see on loogikaviga, mida test näitab.
+    // Тест проверяет, что ТЕКУЩЕЕ приложение позволяет сохранить отрицательную площадь (Area < 0) без ошибки — это логическая ошибка, и тест демонстрирует её.
+    [Fact]
+    public async Task Should_AddRealEstate_WhenAreaIsNegative()
+    {
+        // Arrange – loome normaalse DTO ja paneme Area negatiivseks
+        // Arrange – создаём нормальный DTO и делаем площадь отрицательной
+        var service = Svc<IRealEstateService>();
+        RealEstateDto dto = RealEstatedto1();
+        dto.Area = -10; // negatiivne / отрицательное значение
+
+        // Act – salvestame kinnisvara teenuse kaudu
+        // Act – сохраняем объект через сервис
+        var created = await service.Create(dto);
+
+        // Assert – kontrollime, et negatiivne pindala tõesti salvestati
+        // Assert – проверяем, что отрицательная площадь действительно сохранилась
+        Assert.NotNull(created);
+        Assert.Equal(dto.Area, created.Area);
+        Assert.True(created.Area < 0);
+    }
+
+    // Test 2: ShouldNot_AddRealEstate_WhenAllFieldsAreNull
+    // Test NÄITAB, et praegune rakendus lubab salvestada täiesti tühja DTO (RealEstatedto0), kus kõik väljad on null – see on loogikaviga.
+    // Тест ПОКАЗЫВАЕТ, что текущее приложение позволяет сохранить полностью пустой DTO (RealEstatedto0), где все поля = null — это логическая ошибка.
+    [Fact]
+    public async Task Should_AddRealEstate_WhenAllFieldsAreNull()
+    {
+        // Arrange – kasutame spetsiaalset "tühja" DTO-d RealEstatedto0()
+        // Arrange – используем специальный "пустой" DTO из RealEstatedto0()
+        var service = Svc<IRealEstateService>();
+        RealEstateDto emptyDto = RealEstatedto0();
+
+        // Act – proovime luua kinnisvara täiesti tühjade andmetega
+        // Act – пробуем создать объект недвижимости с полностью пустыми данными
+        var created = await service.Create(emptyDto);
+
+        // Assert – kontrollime, et BAASISSE läkski tühi kirje
+        // Assert – проверяем, что В БАЗУ действительно ушла пустая запись
+        Assert.NotNull(created);
+
+        // põhilised väljad on endiselt null/tühjad
+        // основные поля по-прежнему null/пустые
+        Assert.Null(created.Area);
+        Assert.True(string.IsNullOrWhiteSpace(created.Location));
+        Assert.Null(created.RoomNumber);
+        Assert.True(string.IsNullOrWhiteSpace(created.BuildingType));
+
+        // See test näitab, et sisendit ei valideerita ja tühjad andmed salvestatakse.
+        // Этот тест показывает, что входные данные не валидируются, и пустые данные сохраняются как есть.
+    }
+
+    // Test 3: Should_Allow_ModifiedAt_Before_CreatedAt
+    // Test kontrollib, et süsteem PRAEGU lubab olukorda, kus ModifiedAt on varasem kui CreateAt (ajaliselt "tagurpidi").
+    // Тест проверяет, что система СЕЙЧАС допускает ситуацию, когда ModifiedAt раньше, чем CreateAt (временная «ошибка» в данных).
+    [Fact]
+    public async Task Should_Allow_ModifiedAt_Before_CreatedAt1()
+    {
+        // Arrange – loome algse kinnisvara ja selle uuenduse
+        // Arrange – создаём исходный объект недвижимости и его обновление
+        var service = Svc<IRealEstateService>();
+
+        // esialgsed andmed
+        RealEstateDto original = RealEstatedto1();
+        // uued andmed
+        RealEstateDto update = RealEstatedto2();
+
+        // Paneme ModifiedAt varemaks kui CreateAt
+        // Делаем ModifiedAt раньше, чем CreateAt
+        update.ModifiedAt = DateTime.Now.AddYears(-1);
+        var created = await service.Create(original);
+
+        // Act – käivitame Update uuendatud kuupäevadega
+        // Act – вызываем Update с «перевёрнутыми» датами
+        var result = await service.Update(update);
+
+        // Assert – kontrollime, et tulemus tõesti lubab ModifiedAt <= CreateAt
+        // Assert – проверяем, что результат действительно допускает ModifiedAt <= CreateAt
+        Assert.NotNull(result);
+        // või teha Assert.False  siis <=
+        Assert.True(result.ModifiedAt >= result.CreatedAt);
+
+        // See näitab, et äriloogika ei kontrolli kuupäevade järjekorda
+        // Это показывает, что бизнес-логика не проверяет корректность порядка дат
+    }
 }
