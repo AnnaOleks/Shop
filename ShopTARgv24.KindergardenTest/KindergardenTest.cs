@@ -1,6 +1,6 @@
 ﻿namespace ShopTARgv24.KindergardenTest
 {
-    public class UnitTest1
+    public class KindergardenTest
     {
         [Fact]
         public void Test1()
